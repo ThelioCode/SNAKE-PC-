@@ -8,9 +8,6 @@ body{font-family:'Arial',sans-serif;display:flex;flex-direction:column;align-ite
 h1{color:#00f080;}
 canvas{border:5px solid #238636;background-color:#161b22;display:block;margin:20px 0;box-shadow:0 0 20px rgba(0,240,128,0.4);}
 .game-status{font-size:1.5em;margin-bottom:15px;color:#c9d1d9;}
-button{padding:12px 25px;margin-top:15px;border:none;border-radius:5px;background-color:#00f080;color:#161b22;cursor:pointer;font-size:1.1em;font-weight:bold;transition:background-color 0.2s;}
-button:hover{background-color:#009040;color:white;}
-button:disabled{background-color:#555;cursor:not-allowed;color:#888;}
 .controls{margin-top:20px;text-align:center;color:#8b949e;}
 .high-score{color:#ffcc00;font-size:1.2em;margin-bottom:10px;}
 #game-over-message{position:absolute;background-color:rgba(0,0,0,0.9);color:white;font-size:2.2em;padding:30px;border-radius:15px;display:none;text-align:center;top:50%;left:50%;transform:translate(-50%,-50%);width:350px;border:3px solid red;}
@@ -23,7 +20,6 @@ button:disabled{background-color:#555;cursor:not-allowed;color:#888;}
 <div class="high-score">Meilleur Score: <span id="high-score">0</span></div>
 <div class="game-status">Score: <span id="score">0</span> | Vitesse: <span id="speed-level">1</span></div>
 <canvas id="snakeCanvas" width="400" height="400"></canvas>
-<button id="start-button" onclick="startGame()">Démarrer la Partie</button>
 <div class="controls">🎮 Utilisez les flèches pour jouer</div>
 <div id="game-over-message">GAME OVER !<br>Score final : <span id="final-score">0</span></div>
 
@@ -31,7 +27,7 @@ button:disabled{background-color:#555;cursor:not-allowed;color:#888;}
 const CANVAS_SIZE=400,GRID_SIZE=20,TILE_SIZE=CANVAS_SIZE/GRID_SIZE,INITIAL_SPEED=150,SPEED_INCREMENT=3,MIN_SPEED=50;
 const canvas=document.getElementById('snakeCanvas'),ctx=canvas.getContext('2d');
 const scoreDisplay=document.getElementById('score'),speedDisplay=document.getElementById('speed-level'),highScoreDisplay=document.getElementById('high-score');
-const gameOverMessage=document.getElementById('game-over-message'),startButton=document.getElementById('start-button');
+const gameOverMessage=document.getElementById('game-over-message');
 let snake=[],food={},dx=TILE_SIZE,dy=0,score=0,highScore=localStorage.getItem('snakeHighScore')||0,gameLoopInterval,currentSpeed=INITIAL_SPEED,isChangingDirection=false,isGameRunning=false,nextDirection={dx:TILE_SIZE,dy:0};
 highScoreDisplay.textContent=highScore;
 
@@ -43,21 +39,11 @@ scoreDisplay.textContent=score;
 speedDisplay.textContent=1;
 gameOverMessage.style.display='none';
 isChangingDirection=false;
-isGameRunning=false;
-startButton.disabled=false;
-startButton.textContent='Démarrer la Partie';
+isGameRunning=true;
 generateFood();
 document.removeEventListener('keydown',changeDirection);
 document.addEventListener('keydown',changeDirection);
 drawGame();
-}
-
-function startGame(){
-clearInterval(gameLoopInterval);
-initGame();
-isGameRunning=true;
-startButton.disabled=true;
-startButton.textContent='Jeu en cours...';
 gameLoopInterval=setInterval(mainGameLoop,currentSpeed);
 }
 
@@ -123,9 +109,6 @@ isGameRunning=false;
 clearInterval(gameLoopInterval);
 document.getElementById('final-score').textContent=score;
 gameOverMessage.style.display='block';
-document.removeEventListener('keydown',changeDirection);
-startButton.disabled=false;
-startButton.textContent='Rejouer';
 }
 
 initGame();
